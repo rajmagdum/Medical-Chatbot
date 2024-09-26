@@ -6,4 +6,5 @@ python-dotenv
 faiss-cpu
 openai
 tiktoken
+gunicorn
 -e .
