@@ -1,7 +1,12 @@
+# Load proxy settings from environment (optional)
+        # http_proxy = os.getenv("HTTP_PROXY")
+        # https_proxy = os.getenv("HTTPS_PROXY")
+# openai_proxy=http_proxy if http_proxy else https_proxy  # Load proxy if available 
+
 import os
 from dotenv import load_dotenv
 from langchain.embeddings.openai import OpenAIEmbeddings
-from openai import OpenAIError
+from openai.error import OpenAIError  # Correct way to import OpenAIError
 import math
 
 # Load environment variables from .env file
@@ -10,20 +15,15 @@ load_dotenv()
 # Function to create and return the OpenAIEmbeddings object
 def get_openai_embeddings():
     try:
-        # Load proxy settings from environment (optional)
-        # http_proxy = os.getenv("HTTP_PROXY")
-        # https_proxy = os.getenv("HTTPS_PROXY")
-
-        # Create an OpenAIEmbeddings object, without proxy settings
+        # Create an OpenAIEmbeddings object
         embedding_model = OpenAIEmbeddings(
             model="text-embedding-ada-002",  # Specify the model for embeddings
             openai_api_key=os.getenv("OPENAI_API_KEY"),  # Load OpenAI API key from environment
-            openai_api_base=os.getenv("OPENAI_API_BASE"),  # Load API base URL from environment
-            # openai_proxy=http_proxy if http_proxy else https_proxy  # Load proxy if available (commented out)
+            openai_api_base=os.getenv("OPENAI_API_BASE")  # Load API base URL from environment
         )
         return embedding_model
 
-    except OpenAIError as e:
+    except OpenAIError as e:  # Catch OpenAI-specific errors
         print(f"Error initializing OpenAI embeddings: {str(e)}")
         return None
 
@@ -61,13 +61,12 @@ def download_openai_embeddings(texts, batch_size=20):
 
         return all_embeddings
 
-    except Exception as e:
+    except Exception as e:  # Catch any other errors during embedding generation
         print(f"Error downloading embeddings: {str(e)}")
         return None
 
-# Function to load and preprocess a PDF
+# Function to load and preprocess a PDF (to be implemented)
 def load_pdf(pdf_directory):
-    # Implementation for loading a PDF goes here
     pass
 
 # Function to split the extracted text into smaller chunks
