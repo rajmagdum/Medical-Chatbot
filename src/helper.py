@@ -1,7 +1,7 @@
 import os
 from dotenv import load_dotenv
 from langchain.embeddings.openai import OpenAIEmbeddings
-import openai.error 
+from openai.error import OpenAIError
 import math
 
 # Load environment variables from .env file
@@ -23,7 +23,7 @@ def get_openai_embeddings():
         )
         return embedding_model
 
-    except openai_error.OpenAIError as e:
+    except OpenAIError as e:
         print(f"Error initializing OpenAI embeddings: {str(e)}")
         return None
 
