@@ -1,7 +1,7 @@
 import os
 from dotenv import load_dotenv
 from langchain.embeddings.openai import OpenAIEmbeddings
-from openai.error import OpenAIError
+from openai import OpenAIError
 import math
 
 # Load environment variables from .env file
