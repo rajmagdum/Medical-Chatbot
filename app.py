@@ -1,5 +1,5 @@
 from flask import Flask, render_template, jsonify, request
-from src.helper import get_openai_embeddings  # Updated to import the function
+from src.helper import get_openai_embeddings
 from langchain.vectorstores import FAISS
 import faiss
 import os
@@ -11,7 +11,7 @@ from langchain.chains import RetrievalQA
 from langchain.docstore.in_memory import InMemoryDocstore
 from langchain.docstore.document import Document
 from dotenv import load_dotenv
-from src.prompt import prompt_template  # Ensure this points to the right prompt
+from src.prompt import prompt_template
 import asyncio
 
 app = Flask(__name__)
@@ -31,12 +31,12 @@ def extract_text_from_pdf(pdf_path):
         text += page.extract_text()
     return text
 
-# Step 2: Split the extracted text into smaller chunks (e.g., paragraphs or sentences)
+# Step 2: Split the extracted text into smaller chunks
 def split_text_into_chunks(text, chunk_size=500):
     return [text[i:i + chunk_size] for i in range(0, len(text), chunk_size)]
 
 # Initialize the embedding model
-embedding_model = get_openai_embeddings()  # Initialize the embedding model here
+embedding_model = get_openai_embeddings()
 
 # Check if FAISS index already exists
 if os.path.exists(index_file):
@@ -67,8 +67,8 @@ else:
     document_embeddings_np = np.array(document_embeddings)
 
     # Step 5: Initialize FAISS - Create a new index with the embedding dimension
-    embedding_dim = len(document_embeddings[0])  # Using len() to get the dimensionality of the embedding
-    index = faiss.IndexFlatL2(embedding_dim)  # L2 distance (Euclidean)
+    embedding_dim = len(document_embeddings[0])
+    index = faiss.IndexFlatL2(embedding_dim)
 
     # Step 6: Add the embeddings to the FAISS index
     index.add(document_embeddings_np)
@@ -120,8 +120,7 @@ warm_up_model()  # Call warm-up when the server starts
 
 # Asynchronous query function
 async def async_query(query):
-    result = qa({"query": query})
-    # Remove the <|im_end|> token from the response
+    result = await qa({"query": query})  # Use await here
     clean_result = result["result"].replace("<|im_end|>", "").strip()
     return clean_result
 
@@ -142,4 +141,6 @@ async def chat():
     return jsonify(result)
 
 if __name__ == '__main__':
-    app.run(host="0.0.0.0", port=8080, debug=True, threaded=True)
+    # This block is not needed since gunicorn will serve the app
+    # app.run(host="0.0.0.0", port=8080, debug=True, threaded=True)
+    pass
