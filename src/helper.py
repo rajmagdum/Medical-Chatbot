@@ -6,7 +6,6 @@
 import os
 from dotenv import load_dotenv
 from langchain.embeddings.openai import OpenAIEmbeddings
-import openai  # Correct way to import OpenAIError
 import math
 
 # Load environment variables from .env file
@@ -14,17 +13,14 @@ load_dotenv()
 
 # Function to create and return the OpenAIEmbeddings object
 def get_openai_embeddings():
-    try:
-        # Create an OpenAIEmbeddings object
-        embedding_model = OpenAIEmbeddings(
-            model="text-embedding-ada-002",  # Specify the model for embeddings
-            openai_api_key=os.getenv("OPENAI_API_KEY"),  # Load OpenAI API key from environment
-            openai_api_base=os.getenv("OPENAI_API_BASE")  # Load API base URL from environment
-        )
-        return embedding_model
-    except openai.error.OpenAIError as e:
-        print(f"Error initializing OpenAI embeddings: {e}")
-        return None
+    # Create an OpenAIEmbeddings object
+    embedding_model = OpenAIEmbeddings(
+        model="text-embedding-ada-002",  # Specify the model for embeddings
+        openai_api_key=os.getenv("OPENAI_API_KEY"),  # Load OpenAI API key from environment
+        openai_api_base=os.getenv("OPENAI_API_BASE")  # Load API base URL from environment
+    )
+    return embedding_model
+
 # Optional function to download embeddings for multiple texts in batches (if needed)
 def download_openai_embeddings(texts, batch_size=20):
     """
@@ -37,31 +33,24 @@ def download_openai_embeddings(texts, batch_size=20):
     Returns:
     list of list of float: A list containing the embeddings for each text.
     """
-    try:
-        embedding_model = get_openai_embeddings()
-        if embedding_model is None:
+    embedding_model = get_openai_embeddings()
+
+    all_embeddings = []
+    num_batches = math.ceil(len(texts) / batch_size)
+
+    for i in range(num_batches):
+        batch = texts[i * batch_size : (i + 1) * batch_size]
+        
+        # Embed the batch using the embedding model's embed_documents method
+        batch_embeddings = embedding_model.embed_documents(batch)
+
+        if len(batch_embeddings) != len(batch):
+            print(f"Error: Expected {len(batch)} embeddings but got {len(batch_embeddings)}.")
             return None
 
-        all_embeddings = []
-        num_batches = math.ceil(len(texts) / batch_size)
+        all_embeddings.extend(batch_embeddings)
 
-        for i in range(num_batches):
-            batch = texts[i * batch_size : (i + 1) * batch_size]
-            
-            # Embed the batch using the embedding model's embed_documents method
-            batch_embeddings = embedding_model.embed_documents(batch)
-
-            if len(batch_embeddings) != len(batch):
-                print(f"Error: Expected {len(batch)} embeddings but got {len(batch_embeddings)}.")
-                return None
-
-            all_embeddings.extend(batch_embeddings)
-
-        return all_embeddings
-
-    except Exception as e:  # Catch any other errors during embedding generation
-        print(f"Error downloading embeddings: {str(e)}")
-        return None
+    return all_embeddings
 
 # Function to load and preprocess a PDF (to be implemented)
 def load_pdf(pdf_directory):
