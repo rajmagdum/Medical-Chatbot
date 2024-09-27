@@ -6,7 +6,7 @@
 import os
 from dotenv import load_dotenv
 from langchain.embeddings.openai import OpenAIEmbeddings
-from openai.error import OpenAIError  # Correct way to import OpenAIError
+import openai  # Correct way to import OpenAIError
 import math
 
 # Load environment variables from .env file
@@ -22,11 +22,9 @@ def get_openai_embeddings():
             openai_api_base=os.getenv("OPENAI_API_BASE")  # Load API base URL from environment
         )
         return embedding_model
-
-    except OpenAIError as e:  # Catch OpenAI-specific errors
-        print(f"Error initializing OpenAI embeddings: {str(e)}")
+    except openai.error.OpenAIError as e:
+        print(f"Error initializing OpenAI embeddings: {e}")
         return None
-
 # Optional function to download embeddings for multiple texts in batches (if needed)
 def download_openai_embeddings(texts, batch_size=20):
     """
