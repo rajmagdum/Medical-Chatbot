@@ -13,11 +13,16 @@ from langchain.docstore.document import Document
 from dotenv import load_dotenv
 from src.prompt import prompt_template  # Ensure this points to the right prompt
 import asyncio
+import openai  # Add this import
 
 app = Flask(__name__)
 
 # Load environment variables from .env file
 load_dotenv()
+
+# Set OpenAI API base globally (if needed)
+openai.api_base = os.getenv("OPENAI_API_BASE")  # Set the API base globally
+openai.api_key = os.getenv("OPENAI_API_KEY")  # Set the API key globally
 
 # Path to your PDF file and FAISS index file
 pdf_file_path = "data/Medical_book.pdf"
@@ -92,10 +97,7 @@ PROMPT = PromptTemplate(template=prompt_template, input_variables=["context", "q
 chain_type_kwargs = {"prompt": PROMPT}
 
 # Load the LLM (GPT-3.5 turbo or any specified model) using environment variables
-openai_api_key = os.getenv("OPENAI_API_KEY")
-openai_api_base = os.getenv("OPENAI_API_BASE")
-
-llm = OpenAI(model="gpt-35-turbo", api_key=openai_api_key, api_base=openai_api_base, temperature=0.8, max_tokens=256)
+llm = OpenAI(model="gpt-35-turbo", temperature=0.8, max_tokens=256)  # api_base and api_key are set globally
 
 # Create the RetrievalQA chain
 qa = RetrievalQA.from_chain_type(
