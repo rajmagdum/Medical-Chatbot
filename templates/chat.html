@@ -9,25 +9,40 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}"/>
     <style>
-        /* Additional custom styles for better mobile experience */
-        .chat {
-            overflow-y: auto; /* Enables scrolling if the content overflows */
-            height: 85vh; /* Set a max height for the chat area */
+        /* Custom styles for better visibility and alignment */
+        .msg_head {
+            background-color: rgba(0, 0, 0, 0.3); /* Darker background for contrast */
         }
-        .msg_card_body {
-            padding: 10px; /* Adjust padding for better appearance */
+
+        .user_info span {
+            font-size: 20px;
+            color: white; /* Make text color white for better visibility */
         }
-        .msg_cotainer, .msg_cotainer_send {
-            max-width: 70%; /* Limit the width of messages */
+
+        .user_info p {
+            font-size: 12px; /* Slightly larger font size */
+            color: rgba(255, 255, 255, 0.8); /* Higher opacity for better readability */
         }
-        .user_img, .user_img_msg {
-            width: 40px; /* Set a fixed size for user images */
-            height: 40px; /* Set a fixed size for user images */
+
+        .img_cont img {
+            filter: brightness(80%); /* Reduce the brightness of the logo */
         }
-        @media (max-width: 768px) {
-            .chat {
-                height: 80vh; /* Reduce height on smaller screens */
-            }
+
+        .img_cont {
+            display: flex;
+            justify-content: center; /* Align logo horizontally */
+            align-items: center; /* Align logo vertically */
+            padding-right: 10px; /* Add padding between logo and text */
+        }
+
+        .user_info {
+            margin-left: 10px; /* Adjust margin between logo and text */
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            padding: 10px; /* Add padding to avoid overlap */
         }
     </style>
 </head>
@@ -41,11 +56,10 @@
                         <div class="d-flex bd-highlight">
                             <div class="img_cont">
                                 <img src="{{ url_for('static', filename='medical-logo.png') }}" class="rounded-circle user_img" alt="Medical Logo">
-                                <span class="online_icon"></span>
                             </div>
                             <div class="user_info">
                                 <span>Medical Chatbot</span>
-                                <p>Ask me anything!</p>
+                                <p>Ask me anything related to health!</p>
                             </div>
                         </div>
                     </div>
