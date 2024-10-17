@@ -79,7 +79,7 @@ PROMPT = PromptTemplate(template=prompt_template, input_variables=["context", "q
 chain_type_kwargs = {"prompt": PROMPT}
 
 # Initialize the OpenAI LLM (ensure you're using the correct import)
-llm = OpenAI(model="gpt-35-turbo", temperature=0.8, max_tokens=256)
+llm = OpenAI(model="gpt-3.5-turbo", temperature=0.8, max_tokens=256)
 
 # Initialize the QA system using the FAISS retriever
 qa = RetrievalQA.from_chain_type(
@@ -126,4 +126,6 @@ async def chat():
 
 # Run the Flask app
 if __name__ == '__main__':
-    app.run(host="0.0.0.0", port=8080, debug=True, threaded=True)
+    # Use the PORT environment variable or default to 5000
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host="0.0.0.0", port=port, debug=True, threaded=True)
