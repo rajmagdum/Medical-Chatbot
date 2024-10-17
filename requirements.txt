@@ -9,3 +9,4 @@ faiss-cpu
 openai
 tiktoken
 gunicorn
+langchain-openai  # Add this line
