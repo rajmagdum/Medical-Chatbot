@@ -8,11 +8,18 @@ from dotenv import load_dotenv
 load_dotenv()
 
 # Load and preprocess the PDF data
-extracted_data = load_pdf("data/")
+extracted_data = load_pdf("data/Medical_book.pdf")  # Make sure to load the correct PDF file
+
+# Ensure that the extracted_data is not empty
+if not extracted_data:
+    raise ValueError("No data extracted from the PDF. Please check the PDF file and the load_pdf function.")
+
+# Split the text into chunks for processing
 text_chunks = text_split(extracted_data)
 
 # Create OpenAI embeddings for each text chunk
-texts = [t.page_content for t in text_chunks]
+# If text_chunks are raw strings, this is fine
+texts = [chunk for chunk in text_chunks]
 
 # Call the embedding function to get embeddings for all text chunks
 # Batch size is set to avoid hitting the API payload limit (413 error)

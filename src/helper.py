@@ -1,6 +1,6 @@
 import os
 from dotenv import load_dotenv
-from langchain_community.embeddings import OpenAIEmbeddings  # Updated import
+from langchain_openai import OpenAIEmbeddings  # Updated import
 import openai  # Correct way to import OpenAIError
 import math
 
@@ -14,7 +14,6 @@ def get_openai_embeddings():
         embedding_model = OpenAIEmbeddings(
             model="text-embedding-ada-002",  # Specify the model for embeddings
             openai_api_key=os.getenv("OPENAI_API_KEY"),  # Load OpenAI API key from environment
-            # Remove api_base as it's set globally in app.py
         )
         return embedding_model
     except openai.error.OpenAIError as e:

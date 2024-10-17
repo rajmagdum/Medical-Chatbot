@@ -1,7 +1,9 @@
-langchain==0.0.332
-flask
+langchain>=0.3.1,<0.4.0
+langchain-community==0.3.1
+langsmith>=0.1.125,<0.2.0
+flask>=2.0
 flask[async]
-pypdf2
+PyPDF2
 python-dotenv
 faiss-cpu
 openai
