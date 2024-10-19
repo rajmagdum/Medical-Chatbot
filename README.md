@@ -19,15 +19,18 @@ You need the following tools installed to run this project:
 ## Python Dependencies
 The required Python packages are listed in `requirements.txt`:
 ```bash
-langchain==0.0.332
-flask
+langchain>=0.3.1,<0.4.0
+langchain-community==0.3.1
+langsmith>=0.1.125,<0.2.0
+flask>=2.0
 flask[async]
-pypdf2
+PyPDF2
 python-dotenv
 faiss-cpu
-openai==0.28.0
+openai
 tiktoken
--e .
+gunicorn
+langchain-openai
 ```
 Setup Instructions
 Step 1: Clone the Repository
